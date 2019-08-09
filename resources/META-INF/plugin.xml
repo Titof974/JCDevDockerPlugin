@@ -1,0 +1,30 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>JC-DEVDOCKER</name>
+  <version>1.0</version>
+  <vendor email="jc" url="jc">JC</vendor>
+
+  <description>PWETPWETPWETPWETPWETPWETPWETPWETPWETPWETPWET</description>
+
+  <change-notes>PWETPWETPWETPWETPWETPWETPWETPWETPWETPWETPWET</change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable groupId="tools" displayName="JC DevDocker Plugin Configuration" id="preferences.SingleFileExecutionConfigurable" instance="jc.dev.docker.config.SingleFileExecutionConfigurable" />
+    <projectService serviceInterface="jc.dev.docker.config.SingleFileExecutionConfig" serviceImplementation="jc.dev.docker.config.SingleFileExecutionConfig"/>
+    <toolWindow id="JC Skyminer Tools" anchor="right" factoryClass="jc.dev.docker.JCDevDockerFactory"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
