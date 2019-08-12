@@ -64,7 +64,7 @@ public class SingleFileExecutionConfigurable implements SearchableConfigurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         mGUI.apply();
     }
 

@@ -19,39 +19,39 @@ import org.jetbrains.annotations.Nullable;
 )
 public class SingleFileExecutionConfig implements PersistentStateComponent<SingleFileExecutionConfig> {
 
-    /* NOTE: member should be "public" to be saved in xml */
-    /* add_executable(): exe name */
-    static final String EXECUTABLE_NAME_FILENAME = "%FILENAME%";
-    public static final String DEFAULT_EXECUTABLE_NAME = EXECUTABLE_NAME_FILENAME;
-    public String executableName = DEFAULT_EXECUTABLE_NAME;  // persistent member should be public
-    /* set_target_properties(): runtime output directory */
+
     static final String PROJECTDIR = "%PROJECTDIR%";
     static final String FILEDIR = "%FILEDIR%";
-    public static final String DEFAULT_RUNTIME_OUTPUT_DIRECTORY = "";
-    public String runtimeOutputDirectory = "";   // set empty string as default, persistent member should be public
-    private static final boolean DEFAULT_NOT_SHOW_OVERWRITE_CONFIRM_DIALOG = false;
-    public boolean notShowOverwriteConfirmDialog = DEFAULT_NOT_SHOW_OVERWRITE_CONFIRM_DIALOG;  // persistent member should be public
+
+    public String host = "";
+    public String user = "";
+    public String privateKey = "";
+
 
     SingleFileExecutionConfig() { }
 
-    String getExecutableName() {
-        if (executableName == null) {
-            // Error, it should not happen
-            executableName = "";
-        }
-        return executableName;
+    public String getHost() {
+        return this.host;
     }
 
-    void setExecutableName(String executableName) {
-        this.executableName = executableName;
+    public void setHost(String host) {
+        this.host = host;
     }
 
-    public String getRuntimeOutputDirectory() {
-        return runtimeOutputDirectory;
+    public String getUser() {
+        return this.user;
     }
 
-    public void setRuntimeOutputDirectory(String runtimeOutputDirectory) {
-        this.runtimeOutputDirectory = runtimeOutputDirectory;
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPrivateKey() {
+        return this.privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 
     @Nullable
