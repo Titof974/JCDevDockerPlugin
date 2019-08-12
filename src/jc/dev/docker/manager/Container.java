@@ -10,11 +10,20 @@ public class Container {
     final String id;
     final String name;
     final String image;
+    final String status;
 
-    public Container(String id, String name, String image) {
+    public Container(String id, String name, String image, String rawStatus) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.status = this.checkStatus(rawStatus);
+    }
+
+    public String checkStatus(String rawStatus) {
+        if (rawStatus.startsWith("Up")) {
+            return "Up";
+        }
+        return "Down";
     }
 
     public Map<TEMPLATE, String> toMap() {

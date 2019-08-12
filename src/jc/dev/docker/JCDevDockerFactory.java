@@ -7,6 +7,7 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
 import jc.dev.docker.config.SingleFileExecutionConfig;
 import jc.dev.docker.configJSON.ConfigJSON;
+import jc.dev.docker.manager.Manager;
 import jc.dev.docker.manager.SSH;
 
 public class JCDevDockerFactory implements ToolWindowFactory {
@@ -15,10 +16,11 @@ public class JCDevDockerFactory implements ToolWindowFactory {
          String projectPath = ModuleRootManager.getInstance(ModuleManager.getInstance(project).getModules()[0]).getContentRoots()[0].getPath();
         System.out.println(ModuleRootManager.getInstance(ModuleManager.getInstance(project).getModules()[0]).getContentRoots()[0].getPath());
 
-//        new Manager(SingleFileExecutionConfig.getInstance(project));
-        ConfigJSON configXML = new ConfigJSON(projectPath);
+        Manager manager = new Manager(project);
+        manager.dockerPs();
+        //ConfigJSON configJSON = new ConfigJSON(projectPath);
 
-        JCDevDocker window = new JCDevDocker(toolWindow, new SSH(SingleFileExecutionConfig.getInstance(project)));
+        JCDevDocker window = new JCDevDocker(toolWindow, new SSH(SingleFileExecutionConfig.getInstance(project)), new Manager(project));
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(window.getContent(), "", false);
         toolWindow.getContentManager().addContent(content);

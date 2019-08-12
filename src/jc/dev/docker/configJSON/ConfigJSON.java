@@ -1,5 +1,7 @@
 package jc.dev.docker.configJSON;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -8,6 +10,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class ConfigJSON {
@@ -27,30 +31,21 @@ public class ConfigJSON {
 
         this.file = new File(this.path);
 
-        this.loadConfig();
 
     }
 
-    public boolean isValid() {
-        return this.file.exists();
-    }
-
-    private void loadConfig() {
+    public ConfigContainer[] loadConfig() {
+        ConfigContainer[] configContainers = new ConfigContainer[0];
         if (!this.file.exists()) {
-            return;
+            return configContainers;
         }
-
+        Gson gson = new Gson();
         try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            System.out.println(this.file.getAbsolutePath());
-            final Document document= builder.parse(this.file);
-            final Element racine = document.getDocumentElement();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            JsonReader reader = new JsonReader(new FileReader(this.file));
+            configContainers = gson.fromJson(reader, ConfigContainer[].class);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return configContainers;
     }
 }

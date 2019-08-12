@@ -20,7 +20,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable groupId="tools" displayName="JC DevDocker Plugin Configuration" id="preferences.SingleFileExecutionConfigurable" instance="jc.dev.docker.config.SingleFileExecutionConfigurable" />
     <projectService serviceInterface="jc.dev.docker.config.SingleFileExecutionConfig" serviceImplementation="jc.dev.docker.config.SingleFileExecutionConfig"/>
-    <toolWindow id="JC Skyminer Tools" anchor="right" factoryClass="jc.dev.docker.JCDevDockerFactory"/>
+    <toolWindow id="JC Dev Tools" anchor="right" factoryClass="jc.dev.docker.JCDevDockerFactory"/>
   </extensions>
 
   <actions>
