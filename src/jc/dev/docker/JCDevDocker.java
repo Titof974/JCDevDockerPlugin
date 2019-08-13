@@ -1,5 +1,6 @@
 package jc.dev.docker;
 
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 
 import jc.dev.docker.manager.*;
@@ -41,8 +42,9 @@ public class JCDevDocker {
                 TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
                 if(e.getClickCount() == 2 && selPath.getPathCount() == 3) {
                     System.out.println(selPath.getPath()[selPath.getPathCount()-2]);
-                    String command = ((ActionTreeNode) selPath.getLastPathComponent()).getAction().getCommand();
-                    System.out.println(_ssh.execCommand(command));
+                    List<String> commands = ((ActionTreeNode) selPath.getLastPathComponent()).getAction().getCommands();
+                    manager.execCommands(commands);
+                    drawTree();
                 }
             }
         };
@@ -60,20 +62,18 @@ public class JCDevDocker {
     public void drawTree() {
         List<Container> containers = manager.filterContainersWithActions();
 
-        Map<String, List<Action>> actions = new HashMap<>();
-        actions.put("www1", new ArrayList<>( Arrays.asList(Action.DOCKER_STOP)));
         tree.setModel(null);
-        this.root = this.buildTree(containers, actions);
+        this.root = this.buildTree(containers);
         model = new DefaultTreeModel(root);
         tree.setModel(this.model);
     }
 
-    public DefaultMutableTreeNode buildTree(List<Container> containers, Map<String, List<Action>> actions) {
+    public DefaultMutableTreeNode buildTree(List<Container> containers) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(new NodeIcon("Docker Containers", null));
         for(Container container : containers) {
-            DefaultMutableTreeNode container1 = new DefaultMutableTreeNode(new NodeIcon(container.getName(), "images/red.png"));
-            if (actions.containsKey(container.getName())) {
-                this.addActionToContainer(container, container1, actions.get(container.getName()));
+            DefaultMutableTreeNode container1 = new DefaultMutableTreeNode(new NodeIcon(container.getName(), container.getStatus() ? "green.png" : "red.png"));
+            for (Action action : container.getActions()) {
+                container1.add(new ActionTreeNode(action));
             }
             root.add(container1);
         }
@@ -119,14 +119,21 @@ public class JCDevDocker {
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
                                                       boolean leaf, int row, boolean hasFocus) {
             Object o = ((DefaultMutableTreeNode) value).getUserObject();
-            if (o instanceof NodeIcon) {
+            if (value instanceof ActionTreeNode) {
+                label.setIcon(null);
+                label.setText("" + value);
+            }
+            else if (o instanceof NodeIcon) {
                 NodeIcon nodeIcon = (NodeIcon) o;
                 if (nodeIcon.getIcon() == null) {
+                    label.setIcon(null);
+                    label.setText(nodeIcon.getName());
                     return label;
                 }
-                label.setIcon(new ImageIcon(nodeIcon.getIcon()));
+                label.setIcon(IconLoader.getIcon("/icons/" + nodeIcon.getIcon()));
                 label.setText(nodeIcon.getName());
-            } else {
+            }
+            else {
                 label.setIcon(null);
                 label.setText("" + value);
             }

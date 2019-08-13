@@ -3,6 +3,8 @@ package jc.dev.docker.manager;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
 import jc.dev.docker.config.SingleFileExecutionConfig;
+import jc.dev.docker.configJSON.ConfigAction;
+import jc.dev.docker.configJSON.ConfigCommand;
 import jc.dev.docker.configJSON.ConfigContainer;
 import jc.dev.docker.configJSON.ConfigJSON;
 import com.intellij.openapi.project.Project;
@@ -34,6 +36,13 @@ public class Manager {
         return containers;
     }
 
+    public void execCommands(List<String> commands) {
+        for(String command : commands) {
+            SSH ssh = new SSH(this.config);
+            ssh.execCommand(command);
+        }
+    }
+
     public ConfigContainer[] getContainersFromConfigFile() {
         String projectPath = ModuleRootManager.getInstance(ModuleManager.getInstance(this.project).getModules()[0]).getContentRoots()[0].getPath();
         ConfigJSON configJSON = new ConfigJSON(projectPath);
@@ -47,6 +56,14 @@ public class Manager {
         for(ConfigContainer configContainer : configContainers) {
             for (Container container: containers) {
                 if (configContainer.getName().equals(container.getName())) {
+                    for(ConfigAction configAction : configContainer.getActions()) {
+                        List<String> commands = new ArrayList<>();
+                        for (ConfigCommand command : configAction.getCommands()) {
+                            commands.add(command.getCommand());
+                        }
+                        Action action = new Action(configAction.getName(), commands, true, container.toMap());
+                        container.getActions().add(action);
+                    }
                     newContainersList.add(container);
                     break;
                 }
